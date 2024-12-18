@@ -1,0 +1,68 @@
+-- Chatbot by h4rshbruhh
+
+-- Define the chatbot's name
+local chatbotName = "King Von"
+
+-- Define the chatbot's responses
+local responses = {
+hello = {
+keywords = {"hello", "hi", "hey"},
+responses = {"What's up?", "Hello!", "Hey, how's it going?"}
+},
+howareyou = {
+keywords = {"how are you", "how r u", "how's it going"},
+responses = {"I'm good, thanks!", "I'm doing great!", "I'm just a chatbot, I don't have feelings like humans do!"}
+},
+thanks = {
+keywords = {"thanks", "thank you", "ty"},
+responses = {"You're welcome!", "No problem!", "Anytime!"}
+},
+goodbye = {
+keywords = {"goodbye", "bye", "see you later"},
+responses = {"See you later!", "Goodbye!", "Have a great day!"}
+},
+whatisyourname = {
+keywords = {"what is your name", "what's your name", "who are you"},
+responses = {"My name is " .. chatbotName .. "!", "I'm " .. chatbotName .. "!", "You can call me " .. chatbotName .. "!"}
+},
+joke = {
+keywords = {"tell me a joke", "joke", "make me laugh"},
+responses = {"Why couldn't the bicycle stand up by itself? Because it was two-tired!", "What do you call a fake noodle? An impasta!", "Why did the scarecrow win an award? Because he was outstanding in his field!"}
+},
+help = {
+keywords = {"help", "i need help", "what can you do"},
+responses = {"I can answer questions, tell jokes, and have a conversation with you!", "I'm here to help with any questions or topics you'd like to discuss!", "What do you need help with?"}
+},
+-- Add more responses here...
+}
+
+-- Print a custom message when the script is executed
+print("Chatbot by h4rshbruhh")
+
+-- Function to handle incoming chat messages
+local function onChatMessageReceived(message)
+-- Check if the message is addressed to the chatbot
+if message.Text:lower():startswith(chatbotName:lower()) then
+-- Extract the message content
+local messageContent = message.Text:sub(chatbotName:len() + 2):lower()
+
+```    -- Check if the chatbot has a response for the message
+    for _, response in pairs(responses) do
+        for _, keyword in pairs(response.keywords) do
+            if messageContent:find(keyword) then
+                -- Send a random response from the list
+                local randomResponse = response.responses[math.random(1, #response.responses)]
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(chatbotName, randomResponse, "All")
+                return
+            end
+        end
+    end
+
+    -- Send a default response if no match is found
+    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(chatbotName, "I'm not sure I understand that.", "All")
+end
+```
+end
+
+-- Connect the function to the chat message received event
+game.ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(onChatMessageReceived)
